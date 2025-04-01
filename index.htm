@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="container"> 
+      <p class="date"></p>
+      <h2>Know Times</h2>
+      <select name="country" id="1" placeholder="Country">
+        <option>Alex</option>
+        <option>Desuq</option>
+        <option>cairo</option>
+        <option>Aswan</option>
+      </select>
+      <button name="blur">Click To show time</button>
+      <div class="prayer-table">
+        <table class="table"> 
+          <thead>
+            <tr>
+              <th>Prayer</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fajr</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Sunrise</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Dhuhr</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Asr</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Sunset</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Maghrib</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Isha</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Imsak</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Midnight</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Firstthird</td>
+              <td class="time"></td>
+            </tr>
+            <tr>
+              <td>Lastthird</td>
+              <td class="time"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      let x = new Date();
+      // let s = document.styleSheets[0].rules;
+      let container = document.querySelector(".container");
+      let td = document.querySelectorAll("tbody tr .time");
+      let date = document.querySelector(".date");
+      let button = document.querySelector("[name='blur']");
+      let table = document.querySelector(".prayer-table");
+      date.append(
+        `Today Date is ${x.getDate()} - ${
+          x.getMonth() + 1
+        } - ${x.getFullYear()}`
+      );
+      let select = document.querySelector("select");
+      button.addEventListener("click", async (e) => {
+        try {
+          const request = await axios.get(
+            `https://api.aladhan.com/v1/timingsByCity/${x.getDate()}-${
+              x.getMonth() + 1
+            }-${x.getFullYear()}?city=${select.value}&country=Egypt&method=5`
+          );
+          let prays = Object.keys(request.data.data.timings);
+          let praystime = Object.values(request.data.data.timings);
+          for (i in prays) {
+            td[i].innerHTML = `${praystime[i]}`;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>
